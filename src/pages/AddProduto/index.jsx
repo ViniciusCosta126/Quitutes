@@ -3,26 +3,30 @@ import { BtnSubmit } from "../../components/FormComponents/ButtonSubmit";
 import { Input } from "../../components/FormComponents/Input";
 import { Header } from "../../components/Header";
 import { Products } from "../../context/authContext";
-import uuid from 'react-native-uuid';
+import uuid from "react-native-uuid";
 import * as C from "./style";
 import { Alert } from "react-native";
 export const AddProduto = () => {
   const [produto, setProduto] = useState("");
   const [valor, setValor] = useState();
-  const { handleAddProduct,produtos} = useContext(Products);
+  const { handleAddProduct} = useContext(Products);
 
   const handleClick = () => {
-    if(produto ==="" || valor === ""){
-      Alert.alert("Existem campos vazios", "Por favor preencha todos os campos para prosseguir!")
-      return
+    if (produto === "" || valor === "") {
+      Alert.alert(
+        "Existem campos vazios",
+        "Por favor preencha todos os campos para prosseguir!"
+      );
+      return;
     }
     const data = {
       id: uuid.v4(),
       produto,
       valor,
     };
-    handleAddProduct(data)
-    console.log(produtos)
+    handleAddProduct(data);
+    setProduto("");
+    setValor();
   };
 
   const handleProduto = (e) => {
