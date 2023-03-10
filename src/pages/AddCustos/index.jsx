@@ -53,7 +53,7 @@ export const AddCustos = () => {
     handleAddDespesa(data)
     setDate(new Date())
     setTitleCompra("")
-    setValorCompra("")
+    setValorCompra(0)
   };
   return (
     <C.Container>
