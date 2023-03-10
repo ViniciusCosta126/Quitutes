@@ -4,6 +4,7 @@ import { AddPedido } from "../pages/AddPedido";
 import {AddProduto} from '../pages/AddProduto'
 import { VerFaturamento } from "../pages/Verfaturamento";
 import { VerPedidos } from "../pages/VerPedidos";
+import { AddCustos } from "../pages/AddCustos";
 const Routes = createNativeStackNavigator();
 
 export const ListRoutes = () => {
@@ -12,6 +13,7 @@ export const ListRoutes = () => {
       <Routes.Screen name="HomeScreen" component={Home} />
       <Routes.Screen name="AddPedido" component={AddPedido} />
       <Routes.Screen name="AddProduto" component={AddProduto} />
+      <Routes.Screen name="AddCustos" component={AddCustos} />
       <Routes.Screen name="VerFaturamento" component={VerFaturamento} />
       <Routes.Screen name="VerPedidos" component={VerPedidos} />
     </Routes.Navigator>
