@@ -91,7 +91,8 @@ export const AddPedido = () => {
       data: date.toLocaleDateString(),
       cliente: quemPediu,
       telefone,
-      is_done: false
+      is_done: false,
+      is_pay: false
     };
     handleAddOrder(data)
     setDate(new Date())

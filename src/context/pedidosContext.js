@@ -36,12 +36,36 @@ const PedidosProvider = ({ children }) => {
       }
       return pedido
     })
+    setPedidos(newList)
     await AsyncStorage.setItem(ordersData,JSON.stringify(newList))
-  
+  }
+  const handleIsPay = async (id)=>{
+    const pedidosList = await AsyncStorage.getItem(ordersData)
+    const newList = JSON.parse(pedidosList).map(pedido=>{
+      if(id === pedido.id){
+        return {
+          ...pedido,
+          is_pay:!pedido.is_pay
+        }
+      }
+      return pedido
+    })
+    setPedidos(newList)
+    await AsyncStorage.setItem(ordersData,JSON.stringify(newList))
+  }
+  const handleDelete = async (id)=>{
+    const pedidosList = await AsyncStorage.getItem(ordersData)
+    const newList = JSON.parse(pedidosList).filter(pedido=>{
+      if(id !== pedido.id){
+        return pedido
+      }
+    })
+    setPedidos(newList)
+    await AsyncStorage.setItem(ordersData,JSON.stringify(newList))
   }
 
   return (
-    <Orders.Provider value={{ pedidos, handleAddOrder,handleIsDone}}>
+    <Orders.Provider value={{ pedidos, handleAddOrder,handleIsDone,handleDelete,handleIsPay}}>
       {children}
     </Orders.Provider>
   );
