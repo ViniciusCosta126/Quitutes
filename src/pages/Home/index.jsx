@@ -12,6 +12,7 @@ export default Home = () => {
         <C.ContentContainer>
           <Button textoBtn={"Adicionar Pedido"} titlePage="AddPedido"/>
           <Button textoBtn={"Adicionar Produto"} titlePage="AddProduto"/>
+          <Button textoBtn={"Adicionar Custo"} titlePage="AddCustos"/>
           <Button textoBtn={"Ver Pedidos"} titlePage="VerPedidos"/>
           <Button textoBtn={"Ver Faturamento"} titlePage="VerFaturamento"/>
         </C.ContentContainer>
