@@ -19,7 +19,7 @@ export const AddPedido = () => {
   const [listProducts, setListProducts] = useState([]);
   const [quemPediu, setQuemPediu] = useState("");
   const [telefone, setTelefone] = useState();
-  const { handleAddOrder,pedidos } = useContext(Orders);
+  const { handleAddOrder } = useContext(Orders);
   const filterOptions = () => {
     if (searchTerm === "") {
       return options;
@@ -91,9 +91,13 @@ export const AddPedido = () => {
       data: date.toLocaleDateString(),
       cliente: quemPediu,
       telefone,
+      is_done: false
     };
     handleAddOrder(data)
-    console.log(pedidos)
+    setDate(new Date())
+    setTelefone("")
+    setQuemPediu("")
+    setListProducts([])
   };
 
 
@@ -126,7 +130,7 @@ export const AddPedido = () => {
         </C.DateBtn>
         <Input
           placeholder="Pedido por:"
-          autoCorrec={false}
+          autoCorrect={false}
           value={quemPediu}
           onChangeItem={handleQuemPediu}
         />
