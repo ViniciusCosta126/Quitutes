@@ -14,7 +14,7 @@ const PedidosProvider = ({ children }) => {
       }
     }
     loadOrders();
-  });
+  },[]);
 
   const handleAddOrder = async (data) => {
     try {
@@ -25,9 +25,23 @@ const PedidosProvider = ({ children }) => {
       throw new Error(error);
     }
   };
+  const handleIsDone = async (id)=>{
+    const pedidosList = await AsyncStorage.getItem(ordersData)
+    const newList = JSON.parse(pedidosList).map(pedido=>{
+      if(id === pedido.id){
+        return {
+          ...pedido,
+          is_done:!pedido.is_done
+        }
+      }
+      return pedido
+    })
+    await AsyncStorage.setItem(ordersData,JSON.stringify(newList))
+  
+  }
 
   return (
-    <Orders.Provider value={{ pedidos, handleAddOrder }}>
+    <Orders.Provider value={{ pedidos, handleAddOrder,handleIsDone}}>
       {children}
     </Orders.Provider>
   );
