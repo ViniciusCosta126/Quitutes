@@ -10,7 +10,7 @@ import { Despesas } from "../../context/despesasContext";
 export const AddCustos = () => {
   const [date, setDate] = useState(new Date());
   const [titleCompra, setTitleCompra] = useState("");
-  const [valorCompra, setValorCompra] = useState(0);
+  const [valorCompra, setValorCompra] = useState();
   const {handleAddDespesa} = useContext(Despesas);
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
@@ -53,7 +53,7 @@ export const AddCustos = () => {
     handleAddDespesa(data)
     setDate(new Date())
     setTitleCompra("")
-    setValorCompra(0)
+    setValorCompra()
   };
   return (
     <C.Container>
