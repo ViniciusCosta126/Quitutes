@@ -155,7 +155,7 @@ export const VerPedidos = () => {
                   handleDeleteItem(item.id.toString());
                 }}
               >
-                <Icon name="close" size={16} color="#e83f5b" />
+                <Icon name="trash-o" size={16} color="#e83f5b" />
               </C.BtnDelete>
               <C.BtnPay onPress={() => handlePayItem(item.id.toString())}>
                 <Icon name="dollar" size={16} color="#12a454" />

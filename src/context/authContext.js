@@ -25,9 +25,19 @@ const ProdutosProvider = ({ children }) => {
       throw new Error(error);
     }
   };
+  const handleDelete = async (id)=>{
+    const produtosList = await AsyncStorage.getItem(productsData)
+    const newList = JSON.parse(produtosList).filter(produto=>{
+      if(id !== produto.id){
+        return produto
+      }
+    })
+    setProdutos(newList)
+    await AsyncStorage.setItem(productsData,JSON.stringify(newList))
+  }
 
   return (
-    <Products.Provider value={{ produtos, handleAddProduct }}>
+    <Products.Provider value={{ produtos, handleAddProduct,handleDelete }}>
       {children}
     </Products.Provider>
   );

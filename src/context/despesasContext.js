@@ -25,9 +25,19 @@ const DespesasProvider = ({ children }) => {
       throw new Error(error);
     }
   };
+  const handleDelete = async (id)=>{
+    const despeasList = await AsyncStorage.getItem(despesasData)
+    const newList = JSON.parse(despeasList).filter(despesa=>{
+      if(id !== despesa.id){
+        return despesa
+      }
+    })
+    setDespesas(newList)
+    await AsyncStorage.setItem(despesasData,JSON.stringify(newList))
+  }
 
   return (
-    <Despesas.Provider value={{ despesas, handleAddDespesa }}>
+    <Despesas.Provider value={{ despesas, handleAddDespesa,handleDelete }}>
       {children}
     </Despesas.Provider>
   );
