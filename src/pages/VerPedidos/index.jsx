@@ -11,11 +11,29 @@ export const VerPedidos = () => {
   const [title, setTitle] = useState("Todos os Pedidos");
   const [, updateState] = useState();
   const forceUpdate = useCallback(() => updateState({}), []);
-  const handleTotal = (pedidos) => {
+  const [dateAtual, setDateAtual] = useState(new Date());
+  const [monthFilter, setMonthFilter] = useState(dateAtual);
+  let months = [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
+  ];
+  const handleTotal = (pedidos, entrega) => {
     var somatotal = 0;
     pedidos.map((pedido) => {
-      return (somatotal += pedido.product.valor * pedido.qtd);
+      return somatotal += parseFloat(pedido.product.valor) * parseInt(pedido.qtd);
     });
+   
+   somatotal += parseInt(entrega)
     return somatotal.toFixed(2);
   };
   const handleFilterFeitos = () => {
@@ -88,6 +106,39 @@ export const VerPedidos = () => {
     setPedidosFiltered(newList);
     handleIsPay(id);
   };
+  const handleNextMonth = () => {
+    const newMonth = monthFilter;
+    if (newMonth.getMonth() + 1 > 11) {
+      newMonth.setMonth(newMonth.getMonth() - 11);
+      newMonth.setFullYear(newMonth.getFullYear() + 1);
+    } else {
+      newMonth.setMonth(newMonth.getMonth() + 1);
+     
+    }
+    setMonthFilter(newMonth);
+    filterPedidos()
+  };
+  const handleBeforeMonth =()=>{
+    const newMonth = monthFilter;
+    if (newMonth.getMonth() - 1 < -1) {
+      newMonth.setMonth(newMonth.getMonth() + 11);
+      newMonth.setFullYear(newMonth.getFullYear() - 1);
+      
+    } else {
+      newMonth.setMonth(newMonth.getMonth() - 1);
+    }
+    setMonthFilter(newMonth);
+    filterPedidos()
+  }
+  const filterPedidos = ()=>{
+    const newList = pedidos.filter(pedido=>{
+      let dateFormatA = pedido.data.split('/')
+      dateFormatA = `${dateFormatA[2]}-${dateFormatA[1]}-${dateFormatA[0]}`;
+      let orderDate = new Date(dateFormatA) 
+      return orderDate.getMonth() === monthFilter.getMonth() && orderDate.getFullYear() === monthFilter.getFullYear()
+    })
+    setPedidosFiltered(newList)
+  }
   return (
     <C.Container>
       <Header title="Pedidos Realizados" />
@@ -113,6 +164,15 @@ export const VerPedidos = () => {
       </C.FilterContainer>
 
       <C.PedidosContainer>
+        <C.ContainerDate>
+          <C.BtnAddDate onPress={handleBeforeMonth}>
+            <Icon name="chevron-left" size={20} color={"#fff"} />
+          </C.BtnAddDate>
+          <C.DateTitle>{`${months[monthFilter.getMonth()]}/${monthFilter.getFullYear()}`}</C.DateTitle>
+          <C.BtnAddDate onPress={handleNextMonth}>
+            <Icon name="chevron-right" size={20} color={"#fff"} />
+          </C.BtnAddDate>
+        </C.ContainerDate>
         <C.TitlePedido>{title}</C.TitlePedido>
         <C.ListPedidos
           data={pedidosFiltered}
@@ -136,8 +196,11 @@ export const VerPedidos = () => {
                 )}
                 keyExtractor={(item) => item.product.id.toString()}
               />
+              <C.PedidoEntrega>
+                {item.is_delivery ? `Entrega | Valor da Entrega: R$${parseFloat(item.valorEntrega).toFixed(2)}` : "Retirada"}
+              </C.PedidoEntrega>
               <C.PedidoTitle>
-                Total: R${handleTotal(item.listProducts)} | Status:{" "}
+                Total: R${handleTotal(item.listProducts,item.valorEntrega)} | Status:{" "}
                 {item.is_pay ? "Pago" : "Em Aberto"}
               </C.PedidoTitle>
               <C.BtnCheck

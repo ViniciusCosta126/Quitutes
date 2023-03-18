@@ -9,6 +9,9 @@ border-radius: 6px;
 border: 2px solid ${({theme}) => theme.colors.secondary};
 margin: ${RFValue(10)}px auto;
 padding: 12px 8px;
+display: flex;
+align-items: center;
+justify-content: center;
 `
 export const TextBtn = styled.Text`
 text-align: center;

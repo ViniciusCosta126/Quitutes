@@ -34,6 +34,7 @@ export const ItemText = styled.Text`
 color: ${({theme})=> theme.colors.light};
 font-family: ${({theme})=> theme.fonts.bold};
 margin-right: 12px;
+max-width: 55%;
 `
 export const BtnDelete = styled.TouchableOpacity`
   background-color:${({theme})=> theme.colors.light} ;
