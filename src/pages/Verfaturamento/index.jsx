@@ -77,7 +77,7 @@ export const VerFaturamento = () => {
     var somaTotalDespesa = 0
     newList.map(({listProducts}) =>{
       listProducts.map(item=>{
-        somatotal += item.product.valor * item.qtd
+        somatotal += parseFloat(item.product.valor) * parseInt(item.qtd)
       })
     })
     newListDespesas.map(despesa=>{

@@ -74,7 +74,7 @@ export const AddProduto = () => {
           data={listProdutos}
           renderItem={({ item }) => (
             <C.ItemContainer>
-              <C.ItemText>Produto: {item.produto}</C.ItemText>
+              <C.ItemText>{item.produto}</C.ItemText>
               <C.ItemText>
                 Valor: R${parseFloat(item.valor).toFixed(2)}
               </C.ItemText>

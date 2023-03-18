@@ -8,7 +8,7 @@ import { BtnSubmit } from "../../components/FormComponents/ButtonSubmit";
 import { Alert } from "react-native";
 import uuid from "react-native-uuid";
 import { Orders } from "../../context/pedidosContext";
-
+import { Switch } from "react-native";
 
 export const AddPedido = () => {
   const { produtos } = useContext(Products);
@@ -19,6 +19,9 @@ export const AddPedido = () => {
   const [listProducts, setListProducts] = useState([]);
   const [quemPediu, setQuemPediu] = useState("");
   const [telefone, setTelefone] = useState();
+  const [total, setTotal] = useState(0);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [entrega, setEntrega] = useState();
   const { handleAddOrder } = useContext(Orders);
   const filterOptions = () => {
     if (searchTerm === "") {
@@ -62,23 +65,24 @@ export const AddPedido = () => {
       newList.push(item);
     }
     setListProducts(newList);
+    somaTotal();
   };
 
   const handleQuemPediu = (e) => {
     setQuemPediu(e);
   };
 
+  const handleEntrega = (e) => {
+    setEntrega(e);
+  };
+
   const handleTelefone = (e) => {
     setTelefone(e);
   };
 
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   const handleSubmit = () => {
-    if (
-      telefone === "" ||
-      quemPediu === "" ||
-      date === "" ||
-      listProducts.length === 0
-    ) {
+    if (quemPediu === "" || date === "" || listProducts.length === 0) {
       Alert.alert(
         "Existem campos vazios",
         "Por favor preencha todos os campos para prosseguir!"
@@ -91,16 +95,31 @@ export const AddPedido = () => {
       data: date.toLocaleDateString(),
       cliente: quemPediu,
       telefone,
+      valorEntrega: entrega ? entrega : null,
       is_done: false,
-      is_pay: false
+      is_pay: false,
+      is_delivery: isEnabled,
     };
-    handleAddOrder(data)
-    setDate(new Date())
-    setTelefone("")
-    setQuemPediu("")
-    setListProducts([])
+    handleAddOrder(data);
+    setDate(new Date());
+    setTelefone();
+    setQuemPediu("");
+    setIsEnabled(false);
+    setListProducts([]);
+    setEntrega();
+    setTotal(0);
   };
-
+  const somaTotal = () => {
+    let newTotal = 0;
+    listProducts.map((produto) => {
+      return (newTotal +=
+        parseFloat(produto.product.valor) * parseInt(produto.qtd));
+    });
+    if (entrega > 0) {
+      newTotal += parseInt(entrega);
+    }
+    setTotal(newTotal);
+  };
 
   return (
     <C.Container>
@@ -111,8 +130,8 @@ export const AddPedido = () => {
           value={searchTerm}
           onChangeText={(text) => setSearchTerm(text)}
           onFocus={() => setShowFlatList(!showFlatList)}
+          onSelectionChange={() => setShowFlatList(!showFlatList)}
           autoCorrect={false}
-          onPressOut={() => setShowFlatList(!showFlatList)}
           placeholderTextColor="#fff"
         />
         {showFlatList ? (
@@ -137,13 +156,32 @@ export const AddPedido = () => {
         />
         <Input
           placeholder="Telefone: "
-          autoCorrec={false}
+          autoCorrect={false}
           value={telefone}
           onChangeItem={handleTelefone}
           keyboardType="number-pad"
           inputMode="numeric"
         />
-
+        <C.SwitchContainer>
+          <C.TextSwitch>Entrega?</C.TextSwitch>
+          <Switch
+            trackColor={{ false: "#767577", true: "#f1f1f1" }}
+            thumbColor={isEnabled ? "#D06926" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        </C.SwitchContainer>
+        {isEnabled ? (
+          <Input
+            placeholder="Valor entrega: "
+            autoCorrect={false}
+            value={entrega}
+            onChangeItem={handleEntrega}
+            keyboardType="number-pad"
+            inputMode="numeric"
+          />
+        ) : null}
         {listProducts.length > 0 ? (
           <C.ListProducts
             data={listProducts}
@@ -156,7 +194,7 @@ export const AddPedido = () => {
             keyExtractor={(item) => item.product.id.toString()}
           />
         ) : null}
-
+        <C.TextTotal>Total do Pedido: R${total.toFixed(2)}</C.TextTotal>
         <BtnSubmit onPress={handleSubmit} title="Adicionar Produto" />
       </C.FormContainer>
     </C.Container>

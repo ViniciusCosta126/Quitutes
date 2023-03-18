@@ -106,3 +106,31 @@ export const BtnPay = styled.TouchableOpacity`
   right: 20px;
   border-radius:4px;
 `
+export const PedidoEntrega = styled.Text`
+  color: ${({ theme }) => theme.colors.light};
+  font-size: 18px;
+  font-family: ${({ theme }) => theme.fonts.regular};
+
+`
+export const ContainerDate = styled.View`
+    display: flex;
+    flex-direction:row;
+    margin-top: ${RFValue(20)}px;
+    align-items: center;
+    justify-content: center;
+`
+export const DateTitle = styled.Text`
+    font-size: 24px;
+    color: ${({theme})=> theme.colors.light};
+    font-family:${({theme})=> theme.fonts.bold};
+    margin: 0 ${RFValue(20)}px;
+`
+export const BtnAddDate = styled.TouchableOpacity`
+    background-color: ${({theme})=> theme.colors.primary};
+    border-radius: 100px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
