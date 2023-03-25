@@ -3,6 +3,7 @@ import * as C from "./style";
 import { Header } from "../../components/Header";
 import { Orders } from "../../context/pedidosContext";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { beforeMonth, filterData, nextMonth, somaTotal } from "../../utils";
 
 export const VerPedidos = () => {
   const { pedidos, handleIsDone, handleDelete, handleIsPay } =
@@ -27,15 +28,7 @@ export const VerPedidos = () => {
     "Novembro",
     "Dezembro",
   ];
-  const handleTotal = (pedidos, entrega) => {
-    var somatotal = 0;
-    pedidos.map((pedido) => {
-      return somatotal += parseFloat(pedido.product.valor) * parseInt(pedido.qtd);
-    });
-   
-   somatotal += parseInt(entrega)
-    return somatotal.toFixed(2);
-  };
+
   const handleFilterFeitos = () => {
     const newList = pedidos.filter((pedido) => {
       if (pedido.is_done) {
@@ -45,6 +38,7 @@ export const VerPedidos = () => {
     setTitle("Pedidos Concluidos");
     setPedidosFiltered(newList);
   };
+
   const handleFilterFazer = () => {
     const newList = pedidos.filter((pedido) => {
       if (pedido.is_done === false) {
@@ -54,10 +48,12 @@ export const VerPedidos = () => {
     setTitle("Pedidos a Fazer");
     setPedidosFiltered(newList);
   };
+  
   const handleTodos = () => {
     setPedidosFiltered(pedidos);
     setTitle("Todos os pedidos");
   };
+
   const handleCheck = (id) => {
     const newList = pedidosFiltered.map((pedido) => {
       if (id === pedido.id) {
@@ -71,6 +67,7 @@ export const VerPedidos = () => {
     setPedidosFiltered(newList);
     handleIsDone(id);
   };
+
   const ordenarPorData = () => {
     const newList = pedidosFiltered.sort((a, b) => {
       const newDateA = a.data;
@@ -84,6 +81,7 @@ export const VerPedidos = () => {
     setPedidosFiltered(newList);
     forceUpdate();
   };
+
   const handleDeleteItem = (id) => {
     const newList = pedidosFiltered.filter((pedido) => {
       if (id !== pedido.id) {
@@ -93,6 +91,7 @@ export const VerPedidos = () => {
     setPedidosFiltered(newList);
     handleDelete(id);
   };
+
   const handlePayItem = (id) => {
     const newList = pedidosFiltered.map((pedido) => {
       if (id === pedido.id) {
@@ -106,39 +105,21 @@ export const VerPedidos = () => {
     setPedidosFiltered(newList);
     handleIsPay(id);
   };
+
   const handleNextMonth = () => {
-    const newMonth = monthFilter;
-    if (newMonth.getMonth() + 1 > 11) {
-      newMonth.setMonth(newMonth.getMonth() - 11);
-      newMonth.setFullYear(newMonth.getFullYear() + 1);
-    } else {
-      newMonth.setMonth(newMonth.getMonth() + 1);
-     
-    }
-    setMonthFilter(newMonth);
+    setMonthFilter(nextMonth(monthFilter));
     filterPedidos()
   };
+
   const handleBeforeMonth =()=>{
-    const newMonth = monthFilter;
-    if (newMonth.getMonth() - 1 < -1) {
-      newMonth.setMonth(newMonth.getMonth() + 11);
-      newMonth.setFullYear(newMonth.getFullYear() - 1);
-      
-    } else {
-      newMonth.setMonth(newMonth.getMonth() - 1);
-    }
-    setMonthFilter(newMonth);
+    setMonthFilter(beforeMonth(monthFilter))
     filterPedidos()
   }
+
   const filterPedidos = ()=>{
-    const newList = pedidos.filter(pedido=>{
-      let dateFormatA = pedido.data.split('/')
-      dateFormatA = `${dateFormatA[2]}-${dateFormatA[1]}-${dateFormatA[0]}`;
-      let orderDate = new Date(dateFormatA) 
-      return orderDate.getMonth() === monthFilter.getMonth() && orderDate.getFullYear() === monthFilter.getFullYear()
-    })
-    setPedidosFiltered(newList)
+    setPedidosFiltered(filterData(pedidos,monthFilter))
   }
+
   return (
     <C.Container>
       <Header title="Pedidos Realizados" />
@@ -187,7 +168,7 @@ export const VerPedidos = () => {
                 data={item.listProducts}
                 renderItem={({ item }) => (
                   <C.ItemContainer>
-                    <C.ItemText>{item.product.produto}</C.ItemText>
+                    <C.ItemTitle>{item.product.produto}</C.ItemTitle>
                     <C.ItemText>
                       | R${parseFloat(item.product.valor).toFixed(2)}
                     </C.ItemText>
@@ -200,7 +181,7 @@ export const VerPedidos = () => {
                 {item.is_delivery ? `Entrega | Valor da Entrega: R$${parseFloat(item.valorEntrega).toFixed(2)}` : "Retirada"}
               </C.PedidoEntrega>
               <C.PedidoTitle>
-                Total: R${handleTotal(item.listProducts,item.valorEntrega)} | Status:{" "}
+                Total: R${somaTotal(item.listProducts,item.valorEntrega)} | Status:{" "}
                 {item.is_pay ? "Pago" : "Em Aberto"}
               </C.PedidoTitle>
               <C.BtnCheck
