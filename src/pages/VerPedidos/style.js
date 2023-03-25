@@ -53,11 +53,21 @@ export const ItensList = styled.FlatList`
   padding: 4px;
   border-radius: 4px;
   box-sizing: border-box;
+  margin-bottom: 4px;
 `;
 export const ItemContainer = styled.View`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 4px;
 `;
+export const ItemTitle = styled.Text`
+  margin-right: 4px;
+  color: #fff;
+  text-decoration: ${(props) => (props.feito ? "dashed" : "")};
+  width: 50%;
+ 
+`
 export const ItemText = styled.Text`
   margin-right: 4px;
   color: #fff;

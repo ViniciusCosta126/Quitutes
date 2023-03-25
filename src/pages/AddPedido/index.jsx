@@ -9,6 +9,7 @@ import { Alert } from "react-native";
 import uuid from "react-native-uuid";
 import { Orders } from "../../context/pedidosContext";
 import { Switch } from "react-native";
+import { somaTotal } from "../../utils";
 
 export const AddPedido = () => {
   const { produtos } = useContext(Products);
@@ -46,9 +47,7 @@ export const AddPedido = () => {
     });
   };
 
-  const showDatepicker = () => {
-    showMode("date");
-  };
+  const showDatepicker = () => showMode("date");
 
   const addProductList = (product) => {
     var newList = listProducts;
@@ -65,24 +64,22 @@ export const AddPedido = () => {
       newList.push(item);
     }
     setListProducts(newList);
-    somaTotal();
+    setTotal(somaTotal(listProducts,entrega));
   };
 
-  const handleQuemPediu = (e) => {
-    setQuemPediu(e);
-  };
+  const handleQuemPediu = (e) => setQuemPediu(e);
 
   const handleEntrega = (e) => {
     setEntrega(e);
-  };
+    setTotal(somaTotal(listProducts,entrega))
+  }
 
-  const handleTelefone = (e) => {
-    setTelefone(e);
-  };
+  const handleTelefone = (e) => setTelefone(e);
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
   const handleSubmit = () => {
-    if (quemPediu === "" || date === "" || listProducts.length === 0) {
+    if (quemPediu === "" || date === "" || listProducts.length === 0 || entrega === "") {
       Alert.alert(
         "Existem campos vazios",
         "Por favor preencha todos os campos para prosseguir!"
@@ -108,17 +105,6 @@ export const AddPedido = () => {
     setListProducts([]);
     setEntrega();
     setTotal(0);
-  };
-  const somaTotal = () => {
-    let newTotal = 0;
-    listProducts.map((produto) => {
-      return (newTotal +=
-        parseFloat(produto.product.valor) * parseInt(produto.qtd));
-    });
-    if (entrega > 0) {
-      newTotal += parseInt(entrega);
-    }
-    setTotal(newTotal);
   };
 
   return (
